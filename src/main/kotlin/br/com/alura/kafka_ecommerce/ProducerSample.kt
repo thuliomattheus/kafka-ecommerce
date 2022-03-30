@@ -8,6 +8,7 @@ import org.apache.kafka.clients.producer.RecordMetadata
 import org.apache.kafka.common.serialization.StringSerializer
 import org.jetbrains.annotations.NotNull
 import java.util.Properties
+import java.util.UUID
 
 fun main() {
     var producer = KafkaProducer<String, String>(properties())
@@ -21,10 +22,11 @@ fun main() {
     }.get()
      */
 
-    var value = "123, 345, 1000"
-    var record = ProducerRecord("ECOMMERCE_NEW_ORDER", value, value)
+    var key = UUID.randomUUID().toString()
+    var value = "$key, 345, 1000"
+    var record = ProducerRecord("ECOMMERCE_NEW_ORDER", key, value)
     var email = "Thank you for your order! We are processing stage!"
-    var emailRecord = ProducerRecord("ECOMMERCE_SEND_EMAIL", email, email)
+    var emailRecord = ProducerRecord("ECOMMERCE_SEND_EMAIL", key, email)
 
     producer.send(record, callback()).get()
     producer.send(emailRecord, callback()).get()

@@ -40,5 +40,6 @@ private fun properties(): Properties {
         setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.canonicalName)
         setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer::class.java.canonicalName)
         setProperty(ConsumerConfig.GROUP_ID_CONFIG, FraudDetectorService::class.java.simpleName)
+        setProperty(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, "1")
     }
 }
