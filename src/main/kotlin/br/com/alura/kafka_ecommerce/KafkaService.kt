@@ -3,14 +3,18 @@ package br.com.alura.kafka_ecommerce
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
+import java.io.Closeable
 import java.time.Duration
-import java.util.*
+import java.util.UUID
+import java.util.Properties
 
 class KafkaService(
     private val groupId: String,
     private val topic: String,
     private val parse: ConsumerFunction,
-) {
+): Closeable {
+
+    private lateinit var consumer: KafkaConsumer<String, String>
 
     companion object {
         private fun properties(groupId: String): Properties {
@@ -26,7 +30,7 @@ class KafkaService(
     }
 
     fun run() {
-        val consumer = KafkaConsumer<String, String>(properties(groupId))
+        consumer = KafkaConsumer<String, String>(properties(groupId))
         consumer.subscribe(mutableListOf(topic))
         while (true) {
             var records = consumer.poll(Duration.ofMillis(100))
@@ -36,5 +40,9 @@ class KafkaService(
                 }
             }
         }
+    }
+
+    override fun close() {
+        consumer.close()
     }
 }
