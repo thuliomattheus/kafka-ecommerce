@@ -1,5 +1,6 @@
 package br.com.alura.kafka_ecommerce
 
+import br.com.alura.kafka_ecommerce.serializer.GsonSerializer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -8,11 +9,11 @@ import org.apache.kafka.common.serialization.StringSerializer
 import java.io.Closeable
 import java.util.Properties
 
-class MyKafkaProducer(
-    private val producer: KafkaProducer<String, String> = KafkaProducer(properties()),
+class MyKafkaProducer<T>(
+    private val producer: KafkaProducer<String, T> = KafkaProducer(properties()),
 ): Closeable {
 
-    fun send(topic: String, key: String, value: String) {
+    fun send(topic: String, key: String, value: T) {
         val record = ProducerRecord(topic, key, value)
         producer.send(record, callback()).get()
     }
@@ -30,5 +31,5 @@ class MyKafkaProducer(
 private fun properties() = Properties().apply {
         setProperty(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "127.0.0.1:9092")
         setProperty(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.canonicalName)
-        setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer::class.java.canonicalName)
+        setProperty(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, GsonSerializer::class.java.canonicalName)
     }

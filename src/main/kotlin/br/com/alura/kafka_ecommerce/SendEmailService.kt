@@ -7,8 +7,8 @@ class SendEmailService
 private fun main() {
     KafkaService(
         SendEmailService::class.java.simpleName,
-        "ECOMMERCE_SEND_EMAIL",
-        ::parse
+        ::parse,
+        "ECOMMERCE_SEND_EMAIL"
     )
         .run()
 }

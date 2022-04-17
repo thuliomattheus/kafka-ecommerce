@@ -1,5 +1,6 @@
 package br.com.alura.kafka_ecommerce
 
+import br.com.alura.kafka_ecommerce.entity.Order
 import org.apache.kafka.clients.consumer.ConsumerRecord
 
 class FraudDetectorService
@@ -20,10 +21,10 @@ private fun parse(record: ConsumerRecord<String, String>) {
 }
 
 private fun main() {
-    KafkaService(
+    KafkaService<Order>(
         FraudDetectorService::class.java.simpleName,
+        ::parse,
         "ECOMMERCE_NEW_ORDER",
-        ::parse
     )
         .run()
 }
